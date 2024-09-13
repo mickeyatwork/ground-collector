@@ -1,0 +1,20 @@
+server.port=5000
+
+# Database source (Postgres DB)
+spring.datasource.url=
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username=
+spring.datasource.password=
+
+# API details
+api.api-key-header=
+api.api-key=
+api.api-host-header=
+api.api-host=
+
+# Google Maps details
+maps.key=
+
+
+server.error.whitelabel.enabled=false
+server.error.path=/error

@@ -1,0 +1,17 @@
+{
+    "Locations": [
+      {
+        "name": "Kassam Stadium",
+        "coordinates": [51.716489, -1.207861],
+        "Long": "51.716489",
+        "Lat": "-1.207861"
+      },
+      {
+        "name": "Wembley Stadium",
+        "coordinates": [51.555973, -0.279672],
+        "Long": "51.555973",
+        "Lat": "-0.279672"
+      }
+    ]
+  }
+}

@@ -18,7 +18,7 @@ includes login details for the database. There is an outline on what values are 
 file in: <i>application.properties.example</i>
 
 ### Local Server Setup
-<strong>Server</strong>: Tomcat 8.5.81<br>
+<strong>Server</strong>: Tomcat 9.0.64<br>
 <strong>Version</strong>: Java 11<br>
 <strong>HTTP Port</strong>: 5000<br>
 <strong>Application Context</strong>: GroundCollector

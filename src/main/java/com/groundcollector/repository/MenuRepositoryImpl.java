@@ -19,8 +19,6 @@ import org.apache.logging.log4j.LogManager;
 @Repository
 public class MenuRepositoryImpl implements MenuRepository {
 
-    private static Logger logger = LogManager.getLogger(MenuRepositoryImpl.class);
-
     @Autowired
     public DataSource dataSource;
 
@@ -69,7 +67,6 @@ public class MenuRepositoryImpl implements MenuRepository {
             travelLog.setCompetition((String) entryList.get("competition"));
 
         }
-        logger.info("travelLog: " + travelLog);
         System.out.println("travelLog: " + travelLog);
         return travelLog;
     }

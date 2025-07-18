@@ -9,7 +9,6 @@
 <head>
     <title>Grounds Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" integrity="9IVa20McObhMr6JXg6G9MW6nh7IgLsddsd7zslDrJuIhyu15CCWzSx/uB57RaFQ8" crossorigin="anonymous">
     <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/map.js"></script>
     <style>
@@ -39,6 +38,7 @@
             outline: 0;
         }
     </style>
+
     <script>
         let map;
         let markers = [];
@@ -103,14 +103,14 @@
         </c:forEach>;
         groundHomeToArray = groundHomeTo.split(",");
 
-      <%-- Home team image on map
-        let homeTeamImage = '';
-        <c:forEach var="s" items="${geoLocData}">
-        console.log('<c:out value="${s.homeTeamImage}" />');
-        homeTeamImage += '<c:out value="${s.homeTeamImage}" />,'
-        </c:forEach>;
-        homeTeamImageArray = homeTeamImage.split(",");
-        --%>
+        <%-- Home team image on map
+          let homeTeamImage = '';
+          <c:forEach var="s" items="${geoLocData}">
+          console.log('<c:out value="${s.homeTeamImage}" />');
+          homeTeamImage += '<c:out value="${s.homeTeamImage}" />,'
+          </c:forEach>;
+          homeTeamImageArray = homeTeamImage.split(",");
+          --%>
 
         // Get visited markers from the db
         let vMarkerLat, vMarkerLong, vGroundNameArray, vGroundCityArray, vGroundCapacityArray, vGroundHomeToArray;
@@ -155,7 +155,7 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp" />
 <div id="map"></div>
 <script
-        src="https://maps.googleapis.com/maps/api/js?key=${mapsKey}&callback=initMap&v=weekly"
+        src="https://maps.googleapis.com/maps/api/js?key=${mapsKey}&callback=initMap&v=weekly&libraries=marker"
         defer
 ></script>
 </body>

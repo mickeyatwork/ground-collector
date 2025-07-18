@@ -26,4 +26,9 @@ file in: <i>application.properties.example</i>
 
 
 
+## TODO
+- Colour scheme change. Need to work out how to regenerate the bootstrap.min.css when changing the bootstrap.css
+ 
+
+- Dockerise?
 

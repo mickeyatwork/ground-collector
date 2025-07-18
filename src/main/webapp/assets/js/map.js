@@ -1,5 +1,4 @@
 function initMap() {
-
     const styledMapType = new google.maps.StyledMapType(
         [
             {
@@ -22,7 +21,7 @@ function initMap() {
                 "featureType": "administrative.locality",
                 "stylers": [
                     {
-                        "color": "#ffffff"
+                        "color": "#000000"
                     },
                     {
                         //"visibility": "simplified"
@@ -38,7 +37,7 @@ function initMap() {
                     }
                 ]
             },
-            {
+            /*{
                 "featureType": "landscape",
                 "stylers": [
                     {
@@ -46,6 +45,8 @@ function initMap() {
                     }
                 ]
             },
+
+             */
             {
                 "featureType": "poi",
                 "stylers": [
@@ -70,14 +71,16 @@ function initMap() {
                     }
                 ]
             },
-            {
-                "featureType": "water",
-                "stylers": [
-                    {
-                        "color": "#89cff0"
-                    }
-                ]
-            }
+            /* {
+                 "featureType": "water",
+                 "stylers": [
+                     {
+                         "color": "#89cff0"
+                     }
+                 ]
+             }
+
+             */
         ],
         {name: "Visited"}
     );
@@ -88,6 +91,7 @@ function initMap() {
         mapTypeId: "terrain",
         disableDefaultUI: true,
         zoomControl: true,
+        mapId: '14d32a9abef6b78c19c62124',
         mapTypeControlOptions: {
             mapTypeIds: [],
         },
@@ -171,24 +175,24 @@ function initMap() {
     allControlDiv.style.padding = "10 5 10 10";
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(allControlDiv);
 
-  /* Adding a tab in the map for Home team image markers
-    // Create the DIV to hold the control.
+    /* Adding a tab in the map for Home team image markers
+      // Create the DIV to hold the control.
 
-    const teamImageDiv = document.createElement("div");
-    // Create the control.
-    const teamImage = createControl(map);
-    teamImage.textContent = "Team View";
-    teamImage.title = "Show grounds by home team";
-    teamImage.addEventListener("click", () => {
-        removeAllMarkers();
-        addHomeTeamImageMarker();
-        setMapOnImage(map);
-    });
+      const teamImageDiv = document.createElement("div");
+      // Create the control.
+      const teamImage = createControl(map);
+      teamImage.textContent = "Team View";
+      teamImage.title = "Show grounds by home team";
+      teamImage.addEventListener("click", () => {
+          removeAllMarkers();
+          addHomeTeamImageMarker();
+          setMapOnImage(map);
+      });
 
-    teamImageDiv.appendChild(teamImage);
-    teamImageDiv.style.padding = "10 5 10 10";
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(teamImageDiv);
-   */
+      teamImageDiv.appendChild(teamImage);
+      teamImageDiv.style.padding = "10 5 10 10";
+      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(teamImageDiv);
+     */
     addMarker();
 }
 
@@ -196,9 +200,12 @@ function addMarker() {
 
     for (i = 0; i < markerLat.length; i++) {
 
-        let allGrounds = new google.maps.Marker({
+        const iconImage = document.createElement('img');
+        iconImage.src = icons.stadium.icon
+
+        let allGrounds = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(markerLat[i], markerLong[i]),
-            icon: icons.stadium.icon,
+            content: iconImage,
             map: map,
             title: groundNameArray[i],
         });
@@ -237,9 +244,13 @@ function addMarker() {
 function addVisitedMarker() {
 
     for (i = 0; i < vMarkerLat.length; i++) {
-        let visitedGrounds = new google.maps.Marker({
+
+        const iconVisitedImage = document.createElement('img');
+        iconVisitedImage.src = icons.visitedStadium.icon
+
+        let visitedGrounds = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(vMarkerLat[i], vMarkerLong[i]),
-            icon: icons.visitedStadium.icon,
+            content: iconVisitedImage,
             map: map,
         });
 
@@ -275,9 +286,9 @@ function addHomeTeamImageMarker() {
     for (i = 0; i < markerLat.length; i++) {
 
         console.log("Just before creating marker: " + homeTeamImage.icon[i] )
-        let homeTeamImages = new google.maps.Marker({
+        let homeTeamImages = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(markerLat[i], markerLong[i]),
-            icon: homeTeamImage.icon[i],
+            //icon: homeTeamImage.icon[i],
             map: map,
         });
 

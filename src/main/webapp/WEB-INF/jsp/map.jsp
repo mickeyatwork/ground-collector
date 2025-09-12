@@ -41,6 +41,7 @@
 
     <script>
         let map;
+        let mapId = '14d32a9abef6b78c19c62124';
         let markers = [];
         let visitedMarkers = [];
         let iMarker = [];
@@ -155,7 +156,7 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp" />
 <div id="map"></div>
 <script
-        src="https://maps.googleapis.com/maps/api/js?key=${mapsKey}&callback=initMap&v=weekly&libraries=marker"
+        src="https://maps.googleapis.com/maps/api/js?key=${mapsKey}&callback=initMap&map_id=14d32a9abef6b78c19c62124&v=weekly&libraries=marker"
         defer
 ></script>
 </body>

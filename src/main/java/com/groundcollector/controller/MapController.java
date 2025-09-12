@@ -21,10 +21,14 @@ public class MapController {
     @Value("${maps.key}")
     private String mapsKey;
 
+    @Value("${maps.id")
+    private String mapsID;
+
     @GetMapping("map")
     public String getMap(@ModelAttribute("map") Users user, Model model) {
 
         model.addAttribute("mapsKey", mapsKey);
+        model.addAttribute("mapsID", mapsID);
 
         ArrayList<Grounds> geoLocationList = new ArrayList<>();
         groundsService.geoLocationData(geoLocationList);

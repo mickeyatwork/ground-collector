@@ -40,7 +40,7 @@ public class GroundsApiJsonParser {
 
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/teams?league=" + leagueIdForApi + "&season=2024"))
+                .uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/teams?league=" + leagueIdForApi + "&season=2025"))
                 //.uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/teams?league=41&season=2022"))
                 .header(apiConfig.getApiKeyHeader(), apiConfig.getApiKey())
                 .header(apiConfig.getApiHostHeader(), apiConfig.getApiHost())

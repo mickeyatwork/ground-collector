@@ -13,6 +13,8 @@
   <title>Edit Entry</title>
   <!-- Bootstrap core CSS -->
   <link href="assets/css/bootstrap.min.css" rel="stylesheet" integrity="9IVa20McObhMr6JXg6G9MW6nh7IgLsddsd7zslDrJuIhyu15CCWzSx/uB57RaFQ8" crossorigin="anonymous">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
   <meta name="theme-color" content="#563d7c">
 
@@ -125,6 +127,10 @@
   <div class="control-group">
   </div>
 </div>
+<!-- Select2 JS library -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- Custom scripts for dropdown search functionality -->
+<script src="assets/js/editEntry.js"></script>
 </body>
 </html>
 

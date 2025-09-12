@@ -86,7 +86,7 @@ function initMap() {
     );
 
     map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 7,
+        zoom: 8,
         center: {lat: 52.954156, lng: -1.255423},
         mapTypeId: "terrain",
         disableDefaultUI: true,
@@ -285,7 +285,6 @@ function addHomeTeamImageMarker() {
 
     for (i = 0; i < markerLat.length; i++) {
 
-        console.log("Just before creating marker: " + homeTeamImage.icon[i] )
         let homeTeamImages = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(markerLat[i], markerLong[i]),
             //icon: homeTeamImage.icon[i],

@@ -89,7 +89,7 @@ public class EntryRepositoryImpl implements EntryRepository {
             travelLog.setCompetition((String) editingEntry.get("competition"));
             travelLog.setHomeBadge((String) editingEntry.get("homeBadge"));
             travelLog.setAwayBadge((String) editingEntry.get("awayBadge"));
-            System.out.println("travelLog: " + travelLog);
+            //System.out.println("travelLog: " + travelLog);
 
             return travelLog;
         }

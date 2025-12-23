@@ -111,7 +111,7 @@ public class GroundsRepositoryImpl implements GroundsRepository {
                         //String shortenedGroundName = (result.getString("name").replaceAll("Stadium", "").replaceAll("[-]+","").replaceAll("\\s+", ""));
 
                         geoLoc.add(new Grounds(result.getInt("id"), result.getString("name") , result.getString("lat"),result.getString("lng"),result.getString("capacity"),result.getString("city"),result.getString("homeTeam"),result.getString("logo")));
-                        System.out.println("Team: " + result.getString("name") + " has image URL: " + result.getString("logo"));
+                        //System.out.println("Team: " + result.getString("name") + " has image URL: " + result.getString("logo"));
                         return geoLoc;
 
                     }

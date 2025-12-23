@@ -8,6 +8,7 @@
 
   <!-- Bootstrap core CSS -->
   <link href="assets/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="assets/css/style.css" rel="stylesheet">
 
   <meta name="theme-color" content="#563d7c">
 

@@ -106,6 +106,7 @@
     <title>ENTRY TESTING</title>
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" integrity="9IVa20McObhMr6JXg6G9MW6nh7IgLsddsd7zslDrJuIhyu15CCWzSx/uB57RaFQ8" crossorigin="anonymous">
+<link href="assets/css/style.css" rel="stylesheet">
 
     <meta name="theme-color" content="#563d7c">
 

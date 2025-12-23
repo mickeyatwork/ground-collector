@@ -10,7 +10,7 @@
     <title>Grounds Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" integrity="9IVa20McObhMr6JXg6G9MW6nh7IgLsddsd7zslDrJuIhyu15CCWzSx/uB57RaFQ8" crossorigin="anonymous">
-    <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/map.js"></script>
+    <link href="assets/css/style.css" rel="stylesheet">
     <style>
 
         #map {
@@ -148,13 +148,12 @@
         vGroundHomeTo += '<c:out value="${v.homeTeam}" />,'
         </c:forEach>;
         vGroundHomeToArray = vGroundHomeTo.split(",");
-
-        window.initMap = initMap;
     </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp" />
 <div id="map"></div>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/map.js"></script>
 <script
         src="https://maps.googleapis.com/maps/api/js?key=${mapsKey}&callback=initMap&map_id=14d32a9abef6b78c19c62124&v=weekly&libraries=marker"
         defer

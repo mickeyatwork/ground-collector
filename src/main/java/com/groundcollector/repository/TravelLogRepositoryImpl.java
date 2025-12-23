@@ -65,7 +65,7 @@ public class TravelLogRepositoryImpl implements TravelLogRepository {
             travelLog.add(tLog);
 
         }
-        System.out.println("travelLog: " + travelLog);
+        //System.out.println("travelLog: " + travelLog);
         return travelLog;
     }
 }

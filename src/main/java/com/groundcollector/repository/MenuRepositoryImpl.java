@@ -67,7 +67,7 @@ public class MenuRepositoryImpl implements MenuRepository {
             travelLog.setCompetition((String) entryList.get("competition"));
 
         }
-        System.out.println("travelLog: " + travelLog);
+        //System.out.println("travelLog: " + travelLog);
         return travelLog;
     }
 

@@ -104,17 +104,14 @@
         </c:forEach>;
         groundHomeToArray = groundHomeTo.split(",");
 
-        <%-- Home team image on map
-          let homeTeamImage = '';
-          <c:forEach var="s" items="${geoLocData}">
-          console.log('<c:out value="${s.homeTeamImage}" />');
-          homeTeamImage += '<c:out value="${s.homeTeamImage}" />,'
-          </c:forEach>;
-          homeTeamImageArray = homeTeamImage.split(",");
-          --%>
+        let homeTeamImage = '';
+        <c:forEach var="s" items="${geoLocData}">
+        homeTeamImage += '<c:out value="${s.homeTeamImage}" />,'
+        </c:forEach>;
+        homeTeamImageArray = homeTeamImage.split(",");
 
         // Get visited markers from the db
-        let vMarkerLat, vMarkerLong, vGroundNameArray, vGroundCityArray, vGroundCapacityArray, vGroundHomeToArray;
+        let vMarkerLat, vMarkerLong, vGroundNameArray, vGroundCityArray, vGroundCapacityArray, vGroundHomeToArray, vHomeTeamImageArray;
 
         vMarkerLat = [
             <c:forEach var="v" items="${geoLocVisited}" varStatus="status">
@@ -148,6 +145,12 @@
         vGroundHomeTo += '<c:out value="${v.homeTeam}" />,'
         </c:forEach>;
         vGroundHomeToArray = vGroundHomeTo.split(",");
+
+        let vHomeTeamImage = '';
+        <c:forEach var="v" items="${geoLocVisited}">
+        vHomeTeamImage += '<c:out value="${v.homeTeamImage}" />,'
+        </c:forEach>;
+        vHomeTeamImageArray = vHomeTeamImage.split(",");
     </script>
 </head>
 <body>

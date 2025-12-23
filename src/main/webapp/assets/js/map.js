@@ -201,7 +201,14 @@ function addMarker() {
     for (i = 0; i < markerLat.length; i++) {
 
         const iconImage = document.createElement('img');
-        iconImage.src = icons.stadium.icon
+        // Use home team logo if available, otherwise use default stadium icon
+        if (homeTeamImageArray[i] && homeTeamImageArray[i].trim() !== '') {
+            iconImage.src = homeTeamImageArray[i];
+            iconImage.style.width = '40px';
+            iconImage.style.height = '40px';
+        } else {
+            iconImage.src = icons.stadium.icon;
+        }
 
         let allGrounds = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(markerLat[i], markerLong[i]),
@@ -246,7 +253,14 @@ function addVisitedMarker() {
     for (i = 0; i < vMarkerLat.length; i++) {
 
         const iconVisitedImage = document.createElement('img');
-        iconVisitedImage.src = icons.visitedStadium.icon
+        // Use home team logo if available, otherwise use visited stadium icon
+        if (vHomeTeamImageArray[i] && vHomeTeamImageArray[i].trim() !== '') {
+            iconVisitedImage.src = vHomeTeamImageArray[i];
+            iconVisitedImage.style.width = '40px';
+            iconVisitedImage.style.height = '40px';
+        } else {
+            iconVisitedImage.src = icons.visitedStadium.icon;
+        }
 
         let visitedGrounds = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(vMarkerLat[i], vMarkerLong[i]),

@@ -103,14 +103,14 @@ public class GroundsRepositoryImpl implements GroundsRepository {
     public ArrayList<Grounds> geoLocationData(ArrayList<Grounds> geoLoc) {
         JdbcTemplate template = new JdbcTemplate(dataSource);
 
-        template.query("SELECT g.id,g.name,g.lat,g.lng,g.capacity,g.city,t.name AS homeTeam, t.logo FROM grounds g LEFT JOIN teams t ON t.ground_id = g.id WHERE lat != '' AND lng != '';", new RowMapper<List<Grounds>>() {
+        template.query("SELECT g.id,g.name,g.lat,g.lng,g.capacity,g.city,t.name AS homeTeam, t.logo, t.league_id FROM grounds g LEFT JOIN teams t ON t.ground_id = g.id WHERE lat != '' AND lng != '';", new RowMapper<List<Grounds>>() {
 
                     public List<Grounds> mapRow(ResultSet result, int rowNum) throws SQLException {
 
                         // Below was used in testing, might be useful if we need a condensed version of stadium names
                         //String shortenedGroundName = (result.getString("name").replaceAll("Stadium", "").replaceAll("[-]+","").replaceAll("\\s+", ""));
 
-                        geoLoc.add(new Grounds(result.getInt("id"), result.getString("name") , result.getString("lat"),result.getString("lng"),result.getString("capacity"),result.getString("city"),result.getString("homeTeam"),result.getString("logo")));
+                        geoLoc.add(new Grounds(result.getInt("id"), result.getString("name") , result.getString("lat"),result.getString("lng"),result.getString("capacity"),result.getString("city"),result.getString("homeTeam"),result.getString("logo"), result.getInt("league_id")));
                         //System.out.println("Team: " + result.getString("name") + " has image URL: " + result.getString("logo"));
                         return geoLoc;
 
@@ -127,13 +127,13 @@ public class GroundsRepositoryImpl implements GroundsRepository {
         int currentUserId = userService.findUserId(users).getId();
         JdbcTemplate template = new JdbcTemplate(dataSource);
 
-        String sql = String.format("SELECT g.id,g.name,g.lat,g.lng,g.capacity,g.city,t.name AS homeTeam, t.logo FROM grounds g LEFT JOIN teams t ON t.ground_id = g.id WHERE g.lat != '' AND g.lng != '' AND g.id IN (SELECT DISTINCT ground_id FROM entries WHERE user_id = %s)", currentUserId);
+        String sql = String.format("SELECT g.id,g.name,g.lat,g.lng,g.capacity,g.city,t.name AS homeTeam, t.logo, t.league_id FROM grounds g LEFT JOIN teams t ON t.ground_id = g.id WHERE g.lat != '' AND g.lng != '' AND g.id IN (SELECT DISTINCT ground_id FROM entries WHERE user_id = %s)", currentUserId);
 
        template.query(sql, new RowMapper<List<Grounds>>() {
 
                     public List<Grounds> mapRow(ResultSet result, int rowNum) throws SQLException {
 
-                        geoLocVisited.add(new Grounds(result.getInt("id"), result.getString("name") , result.getString("lat"),result.getString("lng"),result.getString("capacity"),result.getString("city"),result.getString("homeTeam"), result.getString("logo")));
+                        geoLocVisited.add(new Grounds(result.getInt("id"), result.getString("name") , result.getString("lat"),result.getString("lng"),result.getString("capacity"),result.getString("city"),result.getString("homeTeam"), result.getString("logo"), result.getInt("league_id")));
 
                         return geoLocVisited;
 

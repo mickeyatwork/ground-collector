@@ -27,3 +27,4 @@ replay_pid*
 
 # Config Files
 *application.properties
+.idea/dataSources.xml

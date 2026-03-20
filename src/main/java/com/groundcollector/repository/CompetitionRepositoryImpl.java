@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -49,5 +50,15 @@ public class CompetitionRepositoryImpl implements CompetitionRepository {
                 }
         );
         return leagueDropdown;
+    }
+
+    @Override
+    public List<Competition> findAll() {
+        JdbcTemplate template = new JdbcTemplate(dataSource);
+        return template.query("SELECT id, name, country, tier, type FROM competition", new RowMapper<Competition>() {
+            public Competition mapRow(ResultSet result, int rowNum) throws SQLException {
+                return new Competition(result.getInt("id"), result.getString("name"), result.getString("country"), result.getInt("tier"), result.getString("type"));
+            }
+        });
     }
 }

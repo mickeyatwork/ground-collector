@@ -1,7 +1,9 @@
 package com.groundcollector.controller;
 
+import com.groundcollector.model.Competition;
 import com.groundcollector.model.Grounds;
 import com.groundcollector.model.Users;
+import com.groundcollector.service.CompetitionService;
 import com.groundcollector.service.GroundsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +13,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MapController {
 
     @Autowired
     private GroundsService groundsService;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Value("${maps.key}")
     private String mapsKey;
@@ -39,6 +45,9 @@ public class MapController {
         groundsService.geoLocationVisited(geoLocationVisitedList);
         System.out.println("GeoLocationVisited retrieved: " + geoLocationVisitedList.size());
         model.addAttribute("geoLocVisited", geoLocationVisitedList);
+
+        List<Competition> competitions = competitionService.findAll();
+        model.addAttribute("competitions", competitions);
 
         return "map";
     }

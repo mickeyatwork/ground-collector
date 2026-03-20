@@ -10,4 +10,6 @@ public interface CompetitionRepository {
 
     List<Competition> populateDropdownLeaguesOnly (List<Competition> leagueDropdown);
 
+    List<Competition> findAll();
+
 }

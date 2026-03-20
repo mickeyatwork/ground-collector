@@ -1,3 +1,7 @@
+let isCleared = false;
+let activeButtonState = 'all';
+let allVisitedMarkers = [];
+
 function initMap() {
     const styledMapType = new google.maps.StyledMapType(
         [
@@ -24,7 +28,6 @@ function initMap() {
                         "color": "#000000"
                     },
                     {
-                        //"visibility": "simplified"
                         "visibility": "off"
                     }
                 ]
@@ -37,16 +40,6 @@ function initMap() {
                     }
                 ]
             },
-            /*{
-                "featureType": "landscape",
-                "stylers": [
-                    {
-                        "color": "#b12f88"
-                    }
-                ]
-            },
-
-             */
             {
                 "featureType": "poi",
                 "stylers": [
@@ -71,16 +64,6 @@ function initMap() {
                     }
                 ]
             },
-            /* {
-                 "featureType": "water",
-                 "stylers": [
-                     {
-                         "color": "#89cff0"
-                     }
-                 ]
-             }
-
-             */
         ],
         {name: "Visited"}
     );
@@ -98,14 +81,11 @@ function initMap() {
 
     });
 
-    //Associate the styled map with the MapTypeId and set it to display.
     map.mapTypes.set("visited", styledMapType);
     map.setMapTypeId("visited");
 
-    function createControl(map) {
+    function createControl(text, title, onClick) {
         const controlButton = document.createElement("button");
-
-        // Set CSS for the control.
         controlButton.style.backgroundColor = "#fff";
         controlButton.style.border = "2px solid #fff";
         controlButton.style.borderRadius = "3px";
@@ -118,90 +98,127 @@ function initMap() {
         controlButton.style.margin = "8px 0 22px";
         controlButton.style.padding = "0 5px";
         controlButton.style.textAlign = "center";
-        //controlButton.textContent = "Visited";
-        //controlButton.title = "Click to highlight visited grounds";
+        controlButton.textContent = text;
+        controlButton.title = title;
         controlButton.type = "button";
+        controlButton.addEventListener("click", onClick);
         return controlButton;
     }
 
-    // Create the DIV to hold the control.
     const combinedControlDiv = document.createElement("div");
-    // Create the control.
-    const combinedControl = createControl(map);
-    combinedControl.textContent = "Combined";
-    combinedControl.title = "Click to show all grounds with visited ones marked";
-    combinedControl.addEventListener("click", () => {
-        removeAllMarkers();
-        removeVisitedMarkers();
-        addVisitedMarker();
-        setMapOnAll(map);
-        setMapOnVisited(map);
-    });
-
-    // Append the control to the DIV.
-    combinedControlDiv.appendChild(combinedControl);
+    combinedControlDiv.appendChild(createControl("Combined", "Click to show all grounds with visited ones marked", () => {
+        activeButtonState = 'combined';
+        updateMap();
+    }));
     combinedControlDiv.style.padding = "10 10 10 5";
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(combinedControlDiv);
 
-    // Create the DIV to hold the control.
     const visitedControlDiv = document.createElement("div");
-    // Create the control.
-    const visitedControl = createControl(map);
-    visitedControl.textContent = "Visited";
-    visitedControl.title = "Click to highlight visited grounds";
-    visitedControl.addEventListener("click", () => {
-        removeAllMarkers();
-        addVisitedMarker();
-        setMapOnVisited(map);
-    });
-
-    // Append the control to the DIV.
-    visitedControlDiv.appendChild(visitedControl);
+    visitedControlDiv.appendChild(createControl("Visited", "Click to highlight visited grounds", () => {
+        activeButtonState = 'visited';
+        updateMap();
+    }));
     visitedControlDiv.style.padding = "10 5 10 5";
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(visitedControlDiv);
 
-    // Create the DIV to hold the control.
     const allControlDiv = document.createElement("div");
-    // Create the control.
-    const allControl = createControl(map);
-    allControl.textContent = "All";
-    allControl.title = "Show all available grounds";
-    allControl.addEventListener("click", () => {
-        removeVisitedMarkers();
-        setMapOnAll(map);
-    });
-
-    allControlDiv.appendChild(allControl);
+    allControlDiv.appendChild(createControl("All", "Show all available grounds", () => {
+        activeButtonState = 'all';
+        updateMap();
+    }));
     allControlDiv.style.padding = "10 5 10 10";
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(allControlDiv);
 
-    /* Adding a tab in the map for Home team image markers
-      // Create the DIV to hold the control.
-
-      const teamImageDiv = document.createElement("div");
-      // Create the control.
-      const teamImage = createControl(map);
-      teamImage.textContent = "Team View";
-      teamImage.title = "Show grounds by home team";
-      teamImage.addEventListener("click", () => {
-          removeAllMarkers();
-          addHomeTeamImageMarker();
-          setMapOnImage(map);
-      });
-
-      teamImageDiv.appendChild(teamImage);
-      teamImageDiv.style.padding = "10 5 10 10";
-      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(teamImageDiv);
-     */
     addMarker();
+    createAllVisitedMarkers();
+    createLeagueFilterControl();
+    updateMap();
+}
+
+function createLeagueFilterControl() {
+    const leagueFilterDiv = document.createElement("div");
+    leagueFilterDiv.id = "leagueFilterDiv";
+    leagueFilterDiv.style.backgroundColor = "#fff";
+    leagueFilterDiv.style.border = "2px solid #fff";
+    leagueFilterDiv.style.borderRadius = "3px";
+    leagueFilterDiv.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+    leagueFilterDiv.style.padding = "10px";
+    leagueFilterDiv.style.margin = "8px 0 22px";
+    leagueFilterDiv.style.marginRight = "10px";
+
+
+    const uniqueLeagueIds = [...new Set(leagueIdArray.filter(id => id))];
+
+    const allCheckbox = createCheckbox("All Leagues", "all", true);
+    leagueFilterDiv.appendChild(allCheckbox.div);
+
+    const clearCheckbox = createCheckbox("Clear", "clear", false);
+    leagueFilterDiv.appendChild(clearCheckbox.div);
+
+    const checkboxes = [];
+    uniqueLeagueIds.forEach(leagueId => {
+        const checkbox = createCheckbox(competitions.get(parseInt(leagueId)), leagueId, true);
+        checkboxes.push(checkbox);
+        leagueFilterDiv.appendChild(checkbox.div);
+    });
+
+    allCheckbox.input.addEventListener("change", () => {
+        checkboxes.forEach(cb => cb.input.checked = allCheckbox.input.checked);
+        if (allCheckbox.input.checked) {
+            clearCheckbox.input.checked = false;
+            isCleared = false;
+        }
+        updateMap();
+    });
+
+    clearCheckbox.input.addEventListener("change", () => {
+        isCleared = clearCheckbox.input.checked;
+        if (clearCheckbox.input.checked) {
+            allCheckbox.input.checked = false;
+            checkboxes.forEach(cb => cb.input.checked = false);
+        }
+        updateMap();
+    });
+
+    checkboxes.forEach(cb => {
+        cb.input.addEventListener("change", () => {
+            if (cb.input.checked) {
+                clearCheckbox.input.checked = false;
+                isCleared = false;
+            }
+            allCheckbox.input.checked = checkboxes.every(c => c.input.checked);
+            if (checkboxes.every(c => !c.input.checked)) {
+                clearCheckbox.input.checked = true;
+                isCleared = true;
+            }
+            updateMap();
+        });
+    });
+
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(leagueFilterDiv);
+}
+
+function createCheckbox(text, value, checked) {
+    const div = document.createElement("div");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = value;
+    input.checked = checked;
+    input.style.marginRight = "5px";
+
+    const label = document.createElement("label");
+    label.textContent = text;
+    label.style.fontFamily = "Roboto,Arial,sans-serif";
+    label.style.fontSize = "16px";
+
+    div.appendChild(input);
+    div.appendChild(label);
+    return { div, input };
 }
 
 function addMarker() {
-
-    for (i = 0; i < markerLat.length; i++) {
-
+    for (let i = 0; i < markerLat.length; i++) {
         const iconImage = document.createElement('img');
-        // Use home team logo if available, otherwise use default stadium icon
         if (homeTeamImageArray[i] && homeTeamImageArray[i].trim() !== '' && homeTeamImageArray[i] !== 'null') {
             iconImage.src = homeTeamImageArray[i];
             iconImage.style.width = '40px';
@@ -217,23 +234,22 @@ function addMarker() {
             title: groundNameArray[i],
         });
 
-        let infoWindow = new google.maps.InfoWindow(
-            {
-                content: '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    "</div>" +
-                    '<h2 id="firstHeading" class="firstHeading">' + groundNameArray[i] + '</h2>' +
-                    '<div id="bodyContent">' +
-                    "<br><b>City:</b> " + groundCityArray[i] +
-                    "<br><b>Capacity:</b> " + groundCapacityArray[i] +
-                    "<br><b>Home to:</b> " + groundHomeToArray[i] +
-                    "</div>" +
-                    "</div>"
-            }
-        );
+        allGrounds.leagueId = leagueIdArray[i];
+
+        let infoWindow = new google.maps.InfoWindow({
+            content: '<div id="content">' +
+                '<div id="siteNotice"></div>' +
+                '<h2 id="firstHeading" class="firstHeading">' + groundNameArray[i] + '</h2>' +
+                '<div id="bodyContent">' +
+                "<br><b>City:</b> " + groundCityArray[i] +
+                "<br><b>Capacity:</b> " + groundCapacityArray[i] +
+                "<br><b>Home to:</b> " + groundHomeToArray[i] +
+                "<br><b>League:</b> " + competitions.get(parseInt(leagueIdArray[i])) +
+                "</div>" +
+                "</div>"
+        });
 
         allGrounds.addListener("click", () => {
-            // Toggle info window - close if open, open if closed
             if (infoWindow.getMap()) {
                 infoWindow.close();
             } else {
@@ -246,19 +262,15 @@ function addMarker() {
             google.maps.event.addListener(map, "click", function(event) {
                 infoWindow.close();
             });
-
         });
 
         markers.push(allGrounds);
     }
 }
 
-function addVisitedMarker() {
-
-    for (i = 0; i < vMarkerLat.length; i++) {
-
+function createAllVisitedMarkers() {
+    for (let i = 0; i < vMarkerLat.length; i++) {
         const iconVisitedImage = document.createElement('img');
-        // Use home team logo if available, otherwise use visited stadium icon
         if (vHomeTeamImageArray[i] && vHomeTeamImageArray[i].trim() !== '' && vHomeTeamImageArray[i] !== 'null') {
             iconVisitedImage.src = vHomeTeamImageArray[i];
             iconVisitedImage.style.width = '40px';
@@ -270,25 +282,24 @@ function addVisitedMarker() {
         let visitedGrounds = new google.maps.marker.AdvancedMarkerElement({
             position: new google.maps.LatLng(vMarkerLat[i], vMarkerLong[i]),
             content: iconVisitedImage,
-            map: map,
         });
 
-        let infoWindow = new google.maps.InfoWindow(
-            {
-                content: '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    "</div>" +
-                    '<h2 id="firstHeading" class="firstHeading">' + vGroundNameArray[i] + '</h2>' +
-                    '<div id="bodyContent">' +
-                    "<br><b>City:</b> " + vGroundCityArray[i] +
-                    "<br><b>Capacity:</b> " + vGroundCapacityArray[i] +
-                    "<br><b>Home to:</b> " + vGroundHomeToArray[i] +
-                    "</div>" +
-                    "</div>"
-            }
-        );
-        visitedGrounds.addListener("click", callback => {
-            // Toggle info window - close if open, open if closed
+        visitedGrounds.leagueId = vLeagueIdArray[i];
+
+        let infoWindow = new google.maps.InfoWindow({
+            content: '<div id="content">' +
+                '<div id="siteNotice"></div>' +
+                '<h2 id="firstHeading" class="firstHeading">' + vGroundNameArray[i] + '</h2>' +
+                '<div id="bodyContent">' +
+                "<br><b>City:</b> " + vGroundCityArray[i] +
+                "<br><b>Capacity:</b> " + vGroundCapacityArray[i] +
+                "<br><b>Home to:</b> " + vGroundHomeToArray[i] +
+                "<br><b>League:</b> " + competitions.get(parseInt(vLeagueIdArray[i])) +
+                "</div>" +
+                "</div>"
+        });
+
+        visitedGrounds.addListener("click", () => {
             if (infoWindow.getMap()) {
                 infoWindow.close();
             } else {
@@ -301,91 +312,102 @@ function addVisitedMarker() {
                 infoWindow.close();
             });
         });
-        visitedMarkers.push(visitedGrounds);
+        allVisitedMarkers.push(visitedGrounds);
     }
 }
 
-function addHomeTeamImageMarker() {
+function getCoordString(position) {
+    let lat, lng;
+    if (typeof position.lat === 'function') {
+        lat = position.lat();
+    } else {
+        lat = position.lat;
+    }
+    if (typeof position.lng === 'function') {
+        lng = position.lng();
+    } else {
+        lng = position.lng;
+    }
+    return `${lat.toFixed(5)},${lng.toFixed(5)}`;
+}
 
-    for (i = 0; i < markerLat.length; i++) {
+function updateMap() {
+    const leagueFilterDiv = document.getElementById("leagueFilterDiv");
+    if (!leagueFilterDiv) return;
 
-        let homeTeamImages = new google.maps.marker.AdvancedMarkerElement({
-            position: new google.maps.LatLng(markerLat[i], markerLong[i]),
-            //icon: homeTeamImage.icon[i],
-            map: map,
-        });
+    if (isCleared) {
+        removeAllMarkers();
+        removeAllVisitedMarkers();
+        return;
+    }
 
-        let infoWindow = new google.maps.InfoWindow(
-            {
-                content: '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    "</div>" +
-                    '<h2 id="firstHeading" class="firstHeading">' + vGroundNameArray[i] + '</h2>' +
-                    '<div id="bodyContent">' +
-                    "<br><b>City:</b> " + vGroundCityArray[i] +
-                    "<br><b>Capacity:</b> " + vGroundCapacityArray[i] +
-                    "<br><b>Home to:</b> " + vGroundHomeToArray[i] +
-                    "</div>" +
-                    "</div>"
+    const leagueCheckboxes = leagueFilterDiv.querySelectorAll('input[type="checkbox"]:not([value="all"]):not([value="clear"])');
+    const selectedLeagues = [];
+    leagueCheckboxes.forEach(cb => {
+        if (cb.checked) {
+            selectedLeagues.push(cb.value);
+        }
+    });
+
+    removeAllMarkers();
+    removeAllVisitedMarkers();
+
+    if (activeButtonState === 'visited') {
+        for (let i = 0; i < allVisitedMarkers.length; i++) {
+            if (selectedLeagues.includes(allVisitedMarkers[i].leagueId)) {
+                allVisitedMarkers[i].setMap(map);
             }
-        );
-        homeTeamImages.addListener("click", () => {
-            infoWindow.open({
-                anchor: homeTeamImages,
-                map,
-            });
-            google.maps.event.addListener(map, "click", function(event) {
-                infoWindow.close();
-            });
-        });
+        }
+    } else if (activeButtonState === 'combined') {
+        const visitedCoords = new Set();
+        for (let i = 0; i < allVisitedMarkers.length; i++) {
+            if (selectedLeagues.includes(allVisitedMarkers[i].leagueId)) {
+                visitedCoords.add(getCoordString(allVisitedMarkers[i].position));
+            }
+        }
 
-        imageMarkers.push(homeTeamImages);
+        for (let i = 0; i < markers.length; i++) {
+            if (selectedLeagues.includes(markers[i].leagueId)) {
+                markers[i].setMap(map);
+                const markerCoord = getCoordString(markers[i].position);
+                const isVisited = visitedCoords.has(markerCoord);
+                const iconImage = markers[i].content;
+
+                if (isVisited) {
+                    iconImage.style.filter = "";
+                    iconImage.style.opacity = "1";
+                } else {
+                    iconImage.style.filter = "grayscale(100%)";
+                    iconImage.style.opacity = "0.6";
+                }
+            }
+        }
+    } else { // 'all' state
+        for (let i = 0; i < markers.length; i++) {
+            if (selectedLeagues.includes(markers[i].leagueId)) {
+                markers[i].setMap(map);
+                const iconImage = markers[i].content;
+                iconImage.style.filter = "";
+                iconImage.style.opacity = "1";
+            }
+        }
     }
 }
 
-// Sets the map on all markers in the array.
 function setMapOnAll(map) {
-
-    for (i = 0; i < markers.length; i++) {
-
+    for (let i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
     }
 }
 
-// Remove markers.
 function removeAllMarkers() {
-
-    for (i = 0; i < markers.length; i++) {
-
-        markers[i].infoWindow = null;
+    for (let i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
 }
 
-// Add visited markers
-function setMapOnVisited(map) {
-
-    for (i = 0; i < visitedMarkers.length; i++) {
-
-        visitedMarkers[i].setMap(map);
-    }
-}
-
-// Remove visited markers.
-function removeVisitedMarkers() {
-
-    for (i = 0; i < visitedMarkers.length; i++) {
-
-        visitedMarkers[i].infoWindow = null;
-        visitedMarkers[i].setMap(null);
-    }
-}
-
-// Add visited markers
-function setMapOnImage(map) {
-
-    for (i = 0; i < imageMarkers.length; i++) {
-        console.log("Setting image marker as: " + imageMarkers[i])
-        imageMarkers[i].setMap(map);
+function removeAllVisitedMarkers() {
+    for (let i = 0; i < allVisitedMarkers.length; i++) {
+        allVisitedMarkers[i].setMap(null);
     }
 }

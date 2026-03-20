@@ -66,6 +66,7 @@
             groundCapacityArray,
             groundHomeToArray,
             homeTeamImageArray,
+            leagueIdArray,
             allGrounds,
             visitedGrounds,
             i;
@@ -110,8 +111,14 @@
         </c:forEach>;
         homeTeamImageArray = homeTeamImage.split(",");
 
+        let leagueId = '';
+        <c:forEach var="s" items="${geoLocData}">
+        leagueId += '<c:out value="${s.leagueId}" />,'
+        </c:forEach>;
+        leagueIdArray = leagueId.split(",");
+
         // Get visited markers from the db
-        let vMarkerLat, vMarkerLong, vGroundNameArray, vGroundCityArray, vGroundCapacityArray, vGroundHomeToArray, vHomeTeamImageArray;
+        let vMarkerLat, vMarkerLong, vGroundNameArray, vGroundCityArray, vGroundCapacityArray, vGroundHomeToArray, vHomeTeamImageArray, vLeagueIdArray;
 
         vMarkerLat = [
             <c:forEach var="v" items="${geoLocVisited}" varStatus="status">
@@ -151,6 +158,17 @@
         vHomeTeamImage += '<c:out value="${v.homeTeamImage}" />,'
         </c:forEach>;
         vHomeTeamImageArray = vHomeTeamImage.split(",");
+
+        let vLeagueId = '';
+        <c:forEach var="v" items="${geoLocVisited}">
+        vLeagueId += '<c:out value="${v.leagueId}" />,'
+        </c:forEach>;
+        vLeagueIdArray = vLeagueId.split(",");
+
+        const competitions = new Map();
+        <c:forEach var="c" items="${competitions}">
+        competitions.set(${c.id}, '<c:out value="${c.name}"/>');
+        </c:forEach>
     </script>
 </head>
 <body>

@@ -22,4 +22,9 @@ public class CompetitionServiceImpl implements CompetitionService{
     public List<Competition> populateDropdownLeaguesOnly(List<Competition> leagueDropdown) {
         return competitionRepository.populateDropdownLeaguesOnly(leagueDropdown);
     }
+
+    @Override
+    public List<Competition> findAll() {
+        return competitionRepository.findAll();
+    }
 }

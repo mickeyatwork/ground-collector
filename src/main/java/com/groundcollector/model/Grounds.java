@@ -21,6 +21,8 @@ public class Grounds {
     private String aliases;
     @Transient
     private String homeTeamImage;
+    @Transient
+    private Integer leagueId;
 
     public Grounds(String name, String capacity, Integer built, Boolean active) {
         this.name = name;
@@ -86,7 +88,7 @@ public class Grounds {
         this.homeTeam = homeTeam;
     }
 
-    public Grounds(Integer id, String name, String lat, String lng, String capacity, String city, String homeTeam, String homeTeamImage) {
+    public Grounds(Integer id, String name, String lat, String lng, String capacity, String city, String homeTeam, String homeTeamImage, Integer leagueId) {
         this.id = id;
         this.name = name;
         this.lat = lat;
@@ -95,6 +97,7 @@ public class Grounds {
         this.city = city;
         this.homeTeam = homeTeam;
         this.homeTeamImage = homeTeamImage;
+        this.leagueId = leagueId;
     }
 
     public Grounds(String capacity, String image) {
@@ -206,6 +209,14 @@ public class Grounds {
         this.homeTeamImage = homeTeamImage;
     }
 
+    public Integer getLeagueId() {
+        return leagueId;
+    }
+
+    public void setLeagueId(Integer leagueId) {
+        this.leagueId = leagueId;
+    }
+
     public String toString() {
         return "Ground{" +
                 //"id=" + id +
@@ -216,6 +227,7 @@ public class Grounds {
                 ", lat=" + lat +
                 ", lng=" + lng +
                 ", image=" + image +
+                ", leagueId=" + leagueId +
                 '}';
     }
 }

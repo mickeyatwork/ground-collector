@@ -10,5 +10,6 @@ public interface CompetitionService {
 
     List<Competition> populateDropdownLeaguesOnly (List<Competition> leagueDropdown);
 
+    List<Competition> findAll();
 
 }

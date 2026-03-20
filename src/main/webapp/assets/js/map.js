@@ -202,7 +202,7 @@ function addMarker() {
 
         const iconImage = document.createElement('img');
         // Use home team logo if available, otherwise use default stadium icon
-        if (homeTeamImageArray[i] && homeTeamImageArray[i].trim() !== '') {
+        if (homeTeamImageArray[i] && homeTeamImageArray[i].trim() !== '' && homeTeamImageArray[i] !== 'null') {
             iconImage.src = homeTeamImageArray[i];
             iconImage.style.width = '40px';
             iconImage.style.height = '40px';
@@ -233,10 +233,15 @@ function addMarker() {
         );
 
         allGrounds.addListener("click", () => {
-            infoWindow.open({
-                anchor: allGrounds,
-                map,
-            });
+            // Toggle info window - close if open, open if closed
+            if (infoWindow.getMap()) {
+                infoWindow.close();
+            } else {
+                infoWindow.open({
+                    anchor: allGrounds,
+                    map,
+                });
+            }
 
             google.maps.event.addListener(map, "click", function(event) {
                 infoWindow.close();
@@ -254,7 +259,7 @@ function addVisitedMarker() {
 
         const iconVisitedImage = document.createElement('img');
         // Use home team logo if available, otherwise use visited stadium icon
-        if (vHomeTeamImageArray[i] && vHomeTeamImageArray[i].trim() !== '') {
+        if (vHomeTeamImageArray[i] && vHomeTeamImageArray[i].trim() !== '' && vHomeTeamImageArray[i] !== 'null') {
             iconVisitedImage.src = vHomeTeamImageArray[i];
             iconVisitedImage.style.width = '40px';
             iconVisitedImage.style.height = '40px';
@@ -283,10 +288,15 @@ function addVisitedMarker() {
             }
         );
         visitedGrounds.addListener("click", callback => {
-            infoWindow.open({
-                anchor: visitedGrounds,
-                map,
-            });
+            // Toggle info window - close if open, open if closed
+            if (infoWindow.getMap()) {
+                infoWindow.close();
+            } else {
+                infoWindow.open({
+                    anchor: visitedGrounds,
+                    map,
+                });
+            }
             google.maps.event.addListener(map, "click", function (event) {
                 infoWindow.close();
             });
@@ -379,4 +389,3 @@ function setMapOnImage(map) {
         imageMarkers[i].setMap(map);
     }
 }
-

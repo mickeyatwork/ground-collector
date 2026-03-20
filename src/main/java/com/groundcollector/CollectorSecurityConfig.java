@@ -39,7 +39,7 @@ public class CollectorSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/map*").authenticated()
                 .antMatchers("/editEntry*").authenticated()
                 .antMatchers("/deleteEntry*").authenticated()
-                .antMatchers("/groundChecklist*").authenticated()
+                //.antMatchers("/groundChecklist*").authenticated()
                 .antMatchers("/admin*").authenticated()
                 .antMatchers("/admin*").hasAuthority("ADMIN")
                 .antMatchers("/admin/**").hasAuthority("ADMIN")

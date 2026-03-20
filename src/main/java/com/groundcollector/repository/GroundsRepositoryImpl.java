@@ -63,7 +63,7 @@ public class GroundsRepositoryImpl implements GroundsRepository {
         ground.setName(groundName);
 
         JdbcTemplate template = new JdbcTemplate(dataSource);
-        for (Map<String, Object> groundList : template.queryForList("SELECT id,capacity,built,image, FROM grounds WHERE name = ?",
+        for (Map<String, Object> groundList : template.queryForList("SELECT id,capacity,built,image FROM grounds WHERE name = ?",
                 ground.getName())) {
 
             ground.setId((Integer) groundList.get("id"));
@@ -347,5 +347,3 @@ public class GroundsRepositoryImpl implements GroundsRepository {
     }
     // TODO Logic for old / demolished grounds to be shown in the map
 }
-
-

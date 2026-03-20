@@ -4,7 +4,7 @@
     <a class="navbar-brand" href="menu">Home</a>
     <a class="navbar-brand" href="newEntry">New Entry</a>
     <a class="navbar-brand" href="travelLog">Travel Log</a>
-    <a class="navbar-brand" href="groundChecklist">Ground Checklist</a>
+    <%--<a class="navbar-brand" href="groundChecklist">Ground Checklist</a>--%>
     <a class="navbar-brand" href="map">Map</a>
     <sec:authorize access="hasRole('ADMIN')">
         <a class="navbar-brand" href="admin">ADMIN</a>

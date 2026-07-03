@@ -86,21 +86,22 @@
     </div>
     <div><h3><strong>Update various databases here</strong></h3>
     </div>
-    <div style="padding: 10px 10px 10px 0px" id="showTeamUpdates" class="container <%--d-none--%>">
-        <p><strong>Process to add a new leagues set of grounds and teams (run in link order below)</strong></p>
-        <p style="font-size: 12px"><strong>Important: </strong> When adding a new league, you need to make sure the leagues ID and corresponding API ID has been added in the code (see anywhere marked 'ADDING_LEAGUES')</p>
-        <p><a href="groundsUpdate">Fetch ground data by league</a></p>
-        <p><a href="teamsUpdate">Fetch Team data by league</a></p>
-        <p><a href="mapGrounds">Map Teams to their home Grounds</a></p>
-    </div>
-        <div>-----------------------------------------------------</div>
-
-<div>
-    <p><strong>Other functions:</strong></p>
-        <p><a href="individualTeamUpdate">Individual Team Update</a></p>
-        <p><a href="fieldUpdate">Fetch specific field data by league</a></p>
-        <%--<p><a href="createGround">Add a new ground to the database</a></p>--%>
-        <%--<p><a href="updateField">Manually update existing team data</a></p>--%>
+    <div style="padding: 10px 10px 10px 0px" id="adminDropdownContainer">
+        <h3>Admin Actions</h3>
+        <select id="adminDropdown" class="form-control w-50" onchange="if(this.value) window.location.href=this.value">
+            <option value="">Select an admin area to work on...</option>
+            <optgroup label="Data Sync Processes (Run in order)">
+                <option value="groundsUpdate">1. Fetch ground data by league</option>
+                <option value="teamsUpdate">2. Fetch Team data by league</option>
+                <option value="mapGrounds">3. Map Teams to their home Grounds</option>
+            </optgroup>
+            <optgroup label="Other Functions">
+                <option value="individualTeamUpdate">Individual Team Update</option>
+                <option value="fieldUpdate">Fetch specific field data by league</option>
+            </optgroup>
+        </select>
+        <br>
+        <p style="font-size: 12px"><strong>Important Note on Sync: </strong> When adding a new league, you need to make sure the leagues ID and corresponding API ID has been added in the code (see anywhere marked 'ADDING_LEAGUES')</p>
     </div>
     <div>
         <br><br><br>

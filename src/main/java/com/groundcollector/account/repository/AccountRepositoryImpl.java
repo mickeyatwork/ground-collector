@@ -126,4 +126,28 @@ public class AccountRepositoryImpl implements AccountRepository {
         template.update("DELETE FROM verification_tokens where username = ?",
                 token);
     }
+
+    @Override
+    public java.util.List<Account> findAll() {
+        JdbcTemplate template = new JdbcTemplate(dataSource);
+        return template.query("SELECT username, email, first_name, last_name, enabled FROM users",
+                new RowMapper<Account>() {
+                    @Override
+                    public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Account account = new Account();
+                        account.setUsername(rs.getString("username"));
+                        account.setEmail(rs.getString("email"));
+                        account.setFirstName(rs.getString("first_name"));
+                        account.setLastName(rs.getString("last_name"));
+                        account.setEnabled(rs.getInt("enabled"));
+                        return account;
+                    }
+                });
+    }
+
+    @Override
+    public void toggleEnabled(String username, int enabled) {
+        JdbcTemplate template = new JdbcTemplate(dataSource);
+        template.update("UPDATE users SET enabled = ? WHERE username = ?", enabled, username);
+    }
 }

@@ -17,12 +17,13 @@ public class UpdatesRepositoryImpl implements UpdatesRepository {
     @Override
     public Teams updateTeam(Teams team) {
         JdbcTemplate template = new JdbcTemplate(dataSource);
-        template.update("UPDATE teams SET founded = ?, country = ?, league_id = ?, ground_id = ?" +
+        template.update("UPDATE teams SET founded = ?, country = ?, league_id = ?, ground_id = ?, logo = ?" +
                         "WHERE name = ?",
                 team.getFounded(),
                 team.getCountry(),
                 team.getLeagueId(),
                 team.getGroundId(),
+                team.getLogo(),
                 team.getName());
 
         return team;

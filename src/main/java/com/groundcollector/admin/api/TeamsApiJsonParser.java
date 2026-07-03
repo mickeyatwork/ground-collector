@@ -24,6 +24,15 @@ public class TeamsApiJsonParser {
     HashMap<String, Object> map = new HashMap<String, Object>();
 
     public int leagueIdForApi;
+    public int season = 2026;
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
+    }
 
     public int getLeagueIdForApi() {
         return leagueIdForApi;
@@ -36,7 +45,7 @@ public class TeamsApiJsonParser {
     public void insertTeam(TeamRepository repository, ApiConfig apiConfig) {
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/teams?league=" + leagueIdForApi + "&season=2025"))
+                .uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/teams?league=" + leagueIdForApi + "&season=" + season))
                 .header(apiConfig.getApiKeyHeader(), apiConfig.getApiKey())
                 .header(apiConfig.getApiHostHeader(), apiConfig.getApiHost())
                 .method("GET", HttpRequest.BodyPublishers.noBody())
@@ -96,20 +105,27 @@ public class TeamsApiJsonParser {
                             System.out.println("Team mapping: " + map);
 
                             /* ADDING_LEAGUES - add any new leagues here*/
+                            Integer calculatedLeagueId = null;
+                            if (leagueIdForApi == 39) calculatedLeagueId = 1;
+                            else if (leagueIdForApi == 40) calculatedLeagueId = 2;
+                            else if (leagueIdForApi == 41) calculatedLeagueId = 3;
+                            else if (leagueIdForApi == 42) calculatedLeagueId = 4;
+                            else if (leagueIdForApi == 43) calculatedLeagueId = 5;
 
                             if (repository.existsByName(String.valueOf(map.get("name")))) {
-                                System.out.println("Team exists, no update required");
+                                System.out.println("Team exists, updating league and logo");
+                                java.util.List<Teams> existingTeams = repository.findTeamsByName((String) map.get("name"));
+                                if (existingTeams != null && !existingTeams.isEmpty()) {
+                                    Teams existingTeam = existingTeams.get(0);
+                                    if (calculatedLeagueId != null) {
+                                        existingTeam.setLeagueId(calculatedLeagueId);
+                                    }
+                                    existingTeam.setLogo((String) map.get("logo"));
+                                    repository.save(existingTeam);
+                                }
                             } else {
-                                if (leagueIdForApi == 39) {
-                                    repository.save(new Teams((String) map.get("name"), (String) map.get("country"), (Integer) map.get("founded"), FALSE, 1, (String) map.get("logo")));
-                                } else if (leagueIdForApi == 40) {
-                                    repository.save(new Teams((String) map.get("name"), (String) map.get("country"), (Integer) map.get("founded"), FALSE, 2, (String) map.get("logo")));
-                                } else if (leagueIdForApi == 41) {
-                                    repository.save(new Teams((String) map.get("name"), (String) map.get("country"), (Integer) map.get("founded"), FALSE, 3, (String) map.get("logo")));
-                                } else if (leagueIdForApi == 42) {
-                                    repository.save(new Teams((String) map.get("name"), (String) map.get("country"), (Integer) map.get("founded"), FALSE, 4, (String) map.get("logo")));
-                                } else if (leagueIdForApi == 43) {
-                                    repository.save(new Teams((String) map.get("name"), (String) map.get("country"), (Integer) map.get("founded"), FALSE, 5, (String) map.get("logo")));
+                                if (calculatedLeagueId != null) {
+                                    repository.save(new Teams((String) map.get("name"), (String) map.get("country"), (Integer) map.get("founded"), FALSE, calculatedLeagueId, (String) map.get("logo")));
                                 } else {
                                     repository.save(new Teams((String) map.get("name")));
                                 }

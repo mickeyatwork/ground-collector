@@ -40,19 +40,31 @@
     <div>
         <h1>Team Updates</h1>
     </div>
-    <form:form modelAttribute="adminTeams">
+    <form:form modelAttribute="adminTeams" action="teamsUpdate" method="post">
         <form:errors path="*" cssClass="errorblock" element="div" />
+        
+        <c:if test="${not empty successMessage}">
+            <div class="alert alert-success mt-3 mb-3">${successMessage}</div>
+        </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger mt-3 mb-3">${errorMessage}</div>
+        </c:if>
         <label >
             Bulk update <Strong>teams</Strong> by league:
         </label>
         <div><label for="leagueId">League: </label>
             <select name="leagueId" id="leagueId" >
+                <option value="0">*** UPDATE ALL LEAGUES ***</option>
                 <c:forEach items="${competitionNames}" var="competitionNames" varStatus="loop">
                     <option value="${competitionNames.apiId}">
                             ${competitionNames.name}
                     </option>
                 </c:forEach>
             </select></div>
+        <div>
+            <label for="season">Season: </label>
+            <input type="number" name="season" id="season" value="2026" min="2000" max="2100" />
+        </div>
         <input type="submit" class="btn btn-lg btn-primary" role="button" value="Run Update"/>
     </form:form>
     <div class="control-group">

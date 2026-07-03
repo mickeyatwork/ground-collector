@@ -184,85 +184,104 @@ public class AdminController {
     }
 
     @PostMapping("teamsUpdate")
-    public String addTeams(@Valid @ModelAttribute ("adminTeams")
-                                   Admin admin,
-                           BindingResult result) {
+    public String addTeams(@Valid @ModelAttribute ("adminTeams") Admin admin,
+                           BindingResult result,
+                           org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
         admin = adminRepository.getLeagueId(admin);
         System.out.println("League ID selected: " + admin.getLeagueId());
 
-        TeamsApiJsonParser parser = new TeamsApiJsonParser();
-        parser.setLeagueIdForApi(admin.getLeagueId());
-
-        //This adds all selected teams to the DB:
-        parser.insertTeam(teamRepository, apiConfig);
+        try {
+            if (admin.getLeagueId() == 0) {
+                int[] allLeagues = {39, 40, 41, 42, 43};
+                for (int league : allLeagues) {
+                    TeamsApiJsonParser parser = new TeamsApiJsonParser();
+                    parser.setLeagueIdForApi(league);
+                    parser.setSeason(admin.getSeason());
+                    parser.insertTeam(teamRepository, apiConfig);
+                }
+            } else {
+                TeamsApiJsonParser parser = new TeamsApiJsonParser();
+                parser.setLeagueIdForApi(admin.getLeagueId());
+                parser.setSeason(admin.getSeason());
+                parser.insertTeam(teamRepository, apiConfig);
+            }
+            redirectAttributes.addFlashAttribute("successMessage", "Teams updated successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update teams: " + e.getMessage());
+        }
 
         if(result.hasErrors()) {
             System.out.println("There were errors");
-            return "admin/teamsUpdate";
+            return "redirect:/teamsUpdate";
         }
 
-        return "admin/admin";
+        return "redirect:/teamsUpdate";
     }
 
     @PostMapping("groundsUpdate")
-    public String addGrounds(@Valid @ModelAttribute ("adminGrounds")
-                                   Admin admin,
-                           BindingResult result) {
+    public String addGrounds(@Valid @ModelAttribute ("adminGrounds") Admin admin,
+                             BindingResult result,
+                             org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
-        GroundsApiJsonParser parser = new GroundsApiJsonParser();
-        parser.setLeagueIdForApi(admin.getLeagueId());
-
-        JdbcTemplate template = new JdbcTemplate(dataSource);
-
-        //This adds all selected grounds to the DB:
-        parser.insertGround(groundRepository, template, apiConfig);
-
+        try {
+            GroundsApiJsonParser parser = new GroundsApiJsonParser();
+            parser.setLeagueIdForApi(admin.getLeagueId());
+            JdbcTemplate template = new JdbcTemplate(dataSource);
+            parser.insertGround(groundRepository, template, apiConfig);
+            redirectAttributes.addFlashAttribute("successMessage", "Grounds updated successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update grounds: " + e.getMessage());
+        }
 
         if(result.hasErrors()) {
             System.out.println("There were errors");
-            return "admin/groundsUpdate";
+            return "redirect:/groundsUpdate";
         }
 
-        return "admin/admin";
+        return "redirect:/groundsUpdate";
     }
     @PostMapping("createGround")
-    public String createGround(@Valid @ModelAttribute ("createGround")
-                                   Admin admin,
-                           BindingResult result) throws IOException, InterruptedException {
+    public String createGround(@Valid @ModelAttribute ("createGround") Admin admin,
+                               BindingResult result,
+                               org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
 
         CreateIndividualGround parser = new CreateIndividualGround();
         parser.setSearchTerm(admin.getSearchTerm());
 
         if(result.hasErrors()) {
             System.out.println("There were errors");
-            return "admin/createGround";
+            return "redirect:/createGround";
         }
-
-        return "admin/admin";
+        
+        redirectAttributes.addFlashAttribute("successMessage", "Ground creation process completed.");
+        return "redirect:/createGround";
     }
 
     @PostMapping("mapGrounds")
-    public String mapGrounds(@Valid @ModelAttribute ("mapGrounds")
-                                   Admin admin,
-                           BindingResult result) {
+    public String mapGrounds(@Valid @ModelAttribute ("mapGrounds") Admin admin,
+                             BindingResult result,
+                             org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
         System.out.println("admin value: " + admin.getLeagueId());
         admin = adminRepository.getLeagueId(admin);
         System.out.println("League ID selected: " + admin.getLeagueId());
 
-        GroundToTeamMapper parser = new GroundToTeamMapper();
-        parser.setLeagueIdForApi(admin.getLeagueId());
-
-        // This will map teams to their home grounds
-        parser.matchGroundsToTeams(updatesRepository, apiConfig);
+        try {
+            GroundToTeamMapper parser = new GroundToTeamMapper();
+            parser.setLeagueIdForApi(admin.getLeagueId());
+            parser.matchGroundsToTeams(updatesRepository, apiConfig);
+            redirectAttributes.addFlashAttribute("successMessage", "Teams and Grounds mapped successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to map grounds: " + e.getMessage());
+        }
 
         if (result.hasErrors()) {
             System.out.println("There were errors");
-            return "admin/teamsUpdate";
+            return "redirect:/mapGrounds";
         }
 
-        return "admin/admin";
+        return "redirect:/mapGrounds";
     }
 
     @PostMapping("individualTeamUpdate")

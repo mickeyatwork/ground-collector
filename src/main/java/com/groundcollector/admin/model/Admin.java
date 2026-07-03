@@ -8,6 +8,15 @@ public class Admin {
     private int teamId;
     private String updateFieldName;
     private String searchTerm;
+    private int season = 2026;
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
+    }
 
     public int getLeagueId() {
         return leagueId;

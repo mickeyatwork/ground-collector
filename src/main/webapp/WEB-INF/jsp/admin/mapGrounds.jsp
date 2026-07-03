@@ -40,7 +40,15 @@
   <div>
     <h1>Ground Updates</h1>
   </div>
-  <form:form modelAttribute="mapGrounds">
+  <form:form modelAttribute="mapGrounds" action="mapGrounds" method="post">
+    
+    <c:if test="${not empty successMessage}">
+      <div class="alert alert-success mt-3 mb-3">${successMessage}</div>
+    </c:if>
+    <c:if test="${not empty errorMessage}">
+      <div class="alert alert-danger mt-3 mb-3">${errorMessage}</div>
+    </c:if>
+
     <form:errors path="*" cssClass="errorblock" element="div" />
     <label >
       Bulk update <strong>grounds</strong> by league:

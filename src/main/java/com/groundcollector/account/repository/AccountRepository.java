@@ -3,6 +3,7 @@ package com.groundcollector.account.repository;
 import com.groundcollector.account.model.Account;
 import com.groundcollector.account.model.UserDetails;
 import com.groundcollector.account.model.VerificationToken;
+import java.util.List;
 
 public interface AccountRepository {
 
@@ -34,4 +35,8 @@ public interface AccountRepository {
     void delete(Account account);
 
     void deleteToken(String token);
+
+    List<Account> findAll();
+
+    void toggleEnabled(String username, int enabled);
 }

@@ -55,7 +55,7 @@ public class CompetitionRepositoryImpl implements CompetitionRepository {
     @Override
     public List<Competition> findAll() {
         JdbcTemplate template = new JdbcTemplate(dataSource);
-        return template.query("SELECT id, name, country, tier, type FROM competition", new RowMapper<Competition>() {
+        return template.query("SELECT id, name, country, tier, type FROM competition ORDER BY country, tier ASC", new RowMapper<Competition>() {
             public Competition mapRow(ResultSet result, int rowNum) throws SQLException {
                 return new Competition(result.getInt("id"), result.getString("name"), result.getString("country"), result.getInt("tier"), result.getString("type"));
             }

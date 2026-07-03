@@ -136,16 +136,43 @@ function initMap() {
 }
 
 function createLeagueFilterControl() {
+    const leagueFilterContainer = document.createElement("div");
+    leagueFilterContainer.id = "leagueFilterContainer";
+    leagueFilterContainer.style.backgroundColor = "#fff";
+    leagueFilterContainer.style.border = "2px solid #fff";
+    leagueFilterContainer.style.borderRadius = "3px";
+    leagueFilterContainer.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+    leagueFilterContainer.style.margin = "8px 0 22px";
+    leagueFilterContainer.style.maxHeight = "80vh";
+    leagueFilterContainer.style.display = "flex";
+    leagueFilterContainer.style.flexDirection = "column";
+
+    const toggleButton = document.createElement("div");
+    toggleButton.id = "leagueFilterToggle";
+    toggleButton.textContent = "Filter Leagues ▼";
+    toggleButton.title = "Click to toggle league filter";
+    toggleButton.style.padding = "10px";
+    toggleButton.style.cursor = "pointer";
+    toggleButton.style.fontWeight = "bold";
+    toggleButton.style.textAlign = "center";
+    leagueFilterContainer.appendChild(toggleButton);
+
     const leagueFilterDiv = document.createElement("div");
     leagueFilterDiv.id = "leagueFilterDiv";
-    leagueFilterDiv.style.backgroundColor = "#fff";
-    leagueFilterDiv.style.border = "2px solid #fff";
-    leagueFilterDiv.style.borderRadius = "3px";
-    leagueFilterDiv.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-    leagueFilterDiv.style.padding = "10px";
-    leagueFilterDiv.style.margin = "8px 0 22px";
-    leagueFilterDiv.style.marginRight = "10px";
+    leagueFilterDiv.style.padding = "0 10px 10px 10px";
+    leagueFilterDiv.style.display = "none";
+    leagueFilterDiv.style.overflowY = "auto";
+    leagueFilterContainer.appendChild(leagueFilterDiv);
 
+    toggleButton.addEventListener("click", () => {
+        if (leagueFilterDiv.style.display === "none") {
+            leagueFilterDiv.style.display = "block";
+            toggleButton.textContent = "Filter Leagues ▲";
+        } else {
+            leagueFilterDiv.style.display = "none";
+            toggleButton.textContent = "Filter Leagues ▼";
+        }
+    });
 
     const uniqueLeagueIds = [...new Set(leagueIdArray.filter(id => id))];
 
@@ -195,7 +222,11 @@ function createLeagueFilterControl() {
         });
     });
 
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(leagueFilterDiv);
+    const wrapperDiv = document.createElement("div");
+    wrapperDiv.style.padding = "10px 10px 10px 5px";
+    wrapperDiv.appendChild(leagueFilterContainer);
+
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(wrapperDiv);
 }
 
 function createCheckbox(text, value, checked) {

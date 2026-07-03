@@ -174,7 +174,7 @@ function createLeagueFilterControl() {
         }
     });
 
-    const uniqueLeagueIds = [...new Set(leagueIdArray.filter(id => id))];
+    const uniqueLeagueIds = new Set(leagueIdArray.filter(id => id));
 
     const allCheckbox = createCheckbox("All Leagues", "all", true);
     leagueFilterDiv.appendChild(allCheckbox.div);
@@ -183,11 +183,15 @@ function createLeagueFilterControl() {
     leagueFilterDiv.appendChild(clearCheckbox.div);
 
     const checkboxes = [];
-    uniqueLeagueIds.forEach(leagueId => {
-        const checkbox = createCheckbox(competitions.get(parseInt(leagueId)), leagueId, true);
-        checkboxes.push(checkbox);
-        leagueFilterDiv.appendChild(checkbox.div);
-    });
+    
+    for (const [leagueIdNum, leagueName] of competitions) {
+        const leagueIdStr = leagueIdNum.toString();
+        if (uniqueLeagueIds.has(leagueIdStr)) {
+            const checkbox = createCheckbox(leagueName, leagueIdStr, true);
+            checkboxes.push(checkbox);
+            leagueFilterDiv.appendChild(checkbox.div);
+        }
+    }
 
     allCheckbox.input.addEventListener("change", () => {
         checkboxes.forEach(cb => cb.input.checked = allCheckbox.input.checked);

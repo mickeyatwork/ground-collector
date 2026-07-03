@@ -232,15 +232,20 @@ function createLeagueFilterControl() {
 function createCheckbox(text, value, checked) {
     const div = document.createElement("div");
     const input = document.createElement("input");
+    const uniqueId = 'checkbox-' + value + '-' + Math.floor(Math.random() * 10000);
     input.type = "checkbox";
+    input.id = uniqueId;
     input.value = value;
     input.checked = checked;
     input.style.marginRight = "5px";
+    input.style.cursor = "pointer";
 
     const label = document.createElement("label");
+    label.htmlFor = uniqueId;
     label.textContent = text;
     label.style.fontFamily = "Roboto,Arial,sans-serif";
     label.style.fontSize = "16px";
+    label.style.cursor = "pointer";
 
     div.appendChild(input);
     div.appendChild(label);

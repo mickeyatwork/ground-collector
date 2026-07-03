@@ -1,0 +1,61 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # Change this if your primary branch is named 'master'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Stop Tomcat and Backup Old Release
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          sudo systemctl stop tomcat
+          BACKUP_DIR=~/previous-releases/$(date +%F-%H-%M)
+          mkdir -p $BACKUP_DIR
+          # Backup old releases (ignoring errors if they don't exist yet)
+          sudo mv /opt/tomcat/webapps/ROOT.war $BACKUP_DIR/ || true
+          sudo cp -r /opt/tomcat/webapps/ROOT/ $BACKUP_DIR/ || true
+          sudo rm -rf /opt/tomcat/webapps/ROOT/ || true
+
+    - name: Copy WAR file to Server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        source: "target/GroundCollector-0.0.1-SNAPSHOT.war"
+        target: "/tmp"
+        strip_components: 1
+
+    - name: Deploy WAR and Start Tomcat
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          # Move the copied WAR file into tomcat
+          sudo mv /tmp/GroundCollector-0.0.1-SNAPSHOT.war /opt/tomcat/webapps/ROOT.war
+          sudo chown -R tomcat:tomcat /opt/tomcat/
+          sudo systemctl start tomcat
